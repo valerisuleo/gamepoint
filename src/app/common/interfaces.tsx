@@ -21,7 +21,8 @@ export interface IClasses {
 }
 
 
-export interface Props {
+
+export interface IContext {
     children: ReactNode;
 }
 

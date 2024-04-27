@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { IDarkMode } from '../../../common/interfaces';
+import { IDarkMode } from '../../../interfaces';
 
 export interface Card {
     header: {
