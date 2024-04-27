@@ -9,6 +9,9 @@ const GameIndex = () => {
     const { isDarkMode } = useTheme();
     const { games, isLoading } = useGames();
 
+    console.log(games);
+    
+
     return (
         <div>
             <h1 className="my-5">GameIndex</h1>
