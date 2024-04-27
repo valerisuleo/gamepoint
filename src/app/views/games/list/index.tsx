@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { IGame } from '../interfaces';
-import { gameService } from '../service';
 import CardComponent from '../../../common/library/components/cards/card';
 import { cardProps } from '../config';
 import { useTheme } from '../../../common/context/theme/theme';
+import useGames from '../hooks/useGames';
 
 const GameIndex = () => {
-    const [games, setGames] = useState<IGame[]>([]);
     const { isDarkMode } = useTheme();
-
-    useEffect(() => {
-        getGames();
-    }, []);
-
-    async function getGames(): Promise<void> {
-        const promise = gameService.get('games');
-        const { data } = await promise;
-        setGames(data.results);
-        console.log(data);
-    }
+    const { games } = useGames();
 
     return (
         <div>
