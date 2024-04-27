@@ -1,4 +1,4 @@
-import { IClasses, IDarkMode } from '../../../common/interfaces';
+import { IClasses, IDarkMode } from '../../../interfaces';
 
 export interface Btn {
     label: string;
