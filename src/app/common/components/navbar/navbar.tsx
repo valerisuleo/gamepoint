@@ -1,36 +1,54 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable-next-line */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../../library/components/button/button';
 import { IBtn } from '../../library/components/button/interfaces';
+import { useTheme } from '../../context/theme/theme';
+import { Link } from 'react-router-dom';
 
-export interface NavbarProps {}
-
-export function Navbar(props: NavbarProps) {
+export function Navbar() {
     const [isOpen, setOpen] = useState(false);
-
-    const btnProps: IBtn = {
-        label: 'Search',
-        type: 'submit',
+    const { isDarkMode, handleDarkMode } = useTheme();
+    const [btnProps, setProps] = useState<IBtn>({
+        label: 'Dark Mode',
+        type: 'button',
+        isDarkMode,
+        onEmitEvent: handleDarkMode,
         classes: {
             contextual: 'dark',
             size: 'md',
         },
-        onEmitEvent: () => {},
-        isDarkMode: false,
-    };
+    });
 
     const toggleMenu = () => {
         setOpen((prevState) => !prevState);
     };
 
+    useEffect(() => {
+        setProps((prevState) => ({
+            ...prevState,
+            label: isDarkMode ? 'Light Mode' : 'Dark Mode',
+            classes: {
+                ...prevState.classes,
+                contextual: isDarkMode ? 'light' : 'dark',
+            },
+        }));
+    }, [isDarkMode]);
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav
+            className={`navbar navbar-expand-lg navbar-light bg-${
+                isDarkMode ? 'dark' : 'light'
+            }`}
+        >
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">
+                <Link
+                    className={`navbar-brand ${isDarkMode && 'text-white'}`}
+                    to="/"
+                >
                     Game Point
-                </a>
+                </Link>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -49,13 +67,14 @@ export function Navbar(props: NavbarProps) {
                 >
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a
-                                className="nav-link active"
-                                aria-current="page"
-                                href="#"
+                            <Link
+                                className={`navbar-brand ${
+                                    isDarkMode && 'text-white'
+                                }`}
+                                to="/"
                             >
                                 Home
-                            </a>
+                            </Link>
                         </li>
                         {/* <li className="nav-item">
                             <a className="nav-link" href="#">
@@ -102,13 +121,17 @@ export function Navbar(props: NavbarProps) {
                         </li> */}
                     </ul>
                     <form className="d-flex">
-                        <input
-                            className="form-control me-2"
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search"
-                        />
-                        <Button {...btnProps}></Button>
+                        <div className='mx-2'>
+                            <input
+                                className="form-control"
+                                type="search"
+                                placeholder="Search"
+                                aria-label="Search"
+                            />
+                        </div>
+                        <div className="d-flex align-items-center">
+                            <Button {...btnProps}></Button>
+                        </div>
                     </form>
                 </div>
             </div>
