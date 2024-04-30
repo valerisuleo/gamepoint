@@ -12,8 +12,7 @@ const useGames = () => {
     const [isLoading, setSpinner] = useState(false);
 
     useEffect(() => {
-        // getGames(query);
-        console.log(query);
+        getGames(query);
     }, [query]);
 
     async function getGames(params?: Record<string, any>): Promise<void> {
