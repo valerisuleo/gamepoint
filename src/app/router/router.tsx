@@ -10,7 +10,7 @@ const RoutingModule = () => {
     return (
         <Fragment>
             <Navbar></Navbar>
-            <main className="container">
+            <main className="container-fluid">
                 <Suspense fallback={<div>Loading...</div>}>
                     <Routes>
                         <Route

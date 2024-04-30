@@ -25,6 +25,7 @@ export interface IPlatform {
     year_end?: null | number;
     games?: IGame[];
     icon?: any;
+    platform?: any
 }
 
 export interface IGameHeader {
