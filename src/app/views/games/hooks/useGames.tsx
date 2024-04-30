@@ -8,18 +8,20 @@ import { iconMap } from '../../../common/utilities';
 
 const useGames = () => {
     const [games, setGames] = useState<IGame[]>([]);
+    const [query, setQuery] = useState({});
     const [isLoading, setSpinner] = useState(false);
 
     useEffect(() => {
-        getGames();
-    }, []);
+        // getGames(query);
+        console.log(query);
+    }, [query]);
 
     async function getGames(params?: Record<string, any>): Promise<void> {
         try {
             setSpinner(true);
             const promise = gameService.get('games', params);
-            const { data } = await promise;
-            setGames(addIconProp(data.results));
+            const response = await promise;
+            setGames(addIconProp(response.data.results));
         } catch (error) {
             console.log(error);
         } finally {
@@ -27,8 +29,15 @@ const useGames = () => {
         }
     }
 
-    function updatList(current: any): void {
-        getGames({ genres: current.id });
+    function listUpdate(current: any): void {
+        if (Object.values(current).length) {
+            setQuery((prevQuery) => {
+                const newQuery = { ...prevQuery, ...current };
+                return newQuery;
+            });
+        } else {
+            setQuery({});
+        }
     }
 
     function addIconProp(list: IGame[]): IGame[] {
@@ -44,7 +53,7 @@ const useGames = () => {
         });
     }
 
-    return { games, isLoading, updatList };
+    return { games, isLoading, listUpdate };
 };
 
 export default useGames;
