@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
@@ -13,10 +14,10 @@ const useGames = () => {
         getGames();
     }, []);
 
-    async function getGames(): Promise<void> {
+    async function getGames(params?: Record<string, any>): Promise<void> {
         try {
             setSpinner(true);
-            const promise = gameService.get('games');
+            const promise = gameService.get('games', params);
             const { data } = await promise;
             setGames(addIconProp(data.results));
         } catch (error) {
@@ -24,6 +25,10 @@ const useGames = () => {
         } finally {
             setSpinner(false);
         }
+    }
+
+    function updatList(current: any): void {
+        getGames({ genres: current.id });
     }
 
     function addIconProp(list: IGame[]): IGame[] {
@@ -39,7 +44,7 @@ const useGames = () => {
         });
     }
 
-    return { games, isLoading };
+    return { games, isLoading, updatList };
 };
 
 export default useGames;
