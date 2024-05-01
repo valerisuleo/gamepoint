@@ -26,20 +26,31 @@ import usePlatforms from '../hooks/usePlatforms';
 
 import { getBtnProps, sortOptions } from '../config';
 import { cardProps } from './components/game-card';
+import { IBtn } from '../../../common/library/components/button/interfaces';
 
 const GameIndex = () => {
     const { isDarkMode } = useTheme();
-    const { games, isLoading, listUpdate } = useGames();
     const { event } = useDataContext();
-
     const { genres } = useGenres();
-
     const { platforms } = usePlatforms();
+    const { games, isLoading, listUpdate, fetchNextPage, isFetchingNextPage } =
+        useGames();
+
     const [reset, setReset] = useState(false);
     const [heading, setHeading] = useState({});
     const [filters, setFilters] = useState({
         platforms: '',
         ordering: '',
+    });
+    const [btnProps, setBtnProps] = useState<IBtn>({
+        type: 'button',
+        label: 'Load more...',
+        isDarkMode,
+        onEmitEvent: fetchNextPage,
+        classes: {
+            contextual: 'primary',
+            size: 'lg',
+        },
     });
 
     const listProps: IListGroup = {
@@ -58,7 +69,7 @@ const GameIndex = () => {
             label: 'filter by platforms',
             value: filters.platforms,
             onBlur: () => {},
-            onChange: handleInputChange,
+            onChange: handleSelectChange,
             type: 'select',
             textProp: 'name',
             valueProp: 'id',
@@ -70,7 +81,7 @@ const GameIndex = () => {
             label: 'order by:',
             value: filters.ordering,
             onBlur: () => {},
-            onChange: handleInputChange,
+            onChange: handleSelectChange,
             type: 'select',
             textProp: 'label',
             valueProp: 'value',
@@ -81,6 +92,16 @@ const GameIndex = () => {
     useEffect(() => {
         handleData(event);
     }, [event]);
+
+    useEffect(() => {
+        setBtnProps((prevState) => ({
+            ...prevState,
+            classes: {
+                ...prevState.classes,
+                contextual: isDarkMode ? 'light' : 'dark',
+            },
+        }));
+    }, [isDarkMode]);
 
     function handleData(event?: IEventEmitted): void {
         if (event) {
@@ -103,7 +124,7 @@ const GameIndex = () => {
         setReset(false);
     }
 
-    function handleInputChange(e: React.ChangeEvent<HTMLSelectElement>): void {
+    function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>): void {
         const { name, value } = e.target;
 
         setFilters((prev) => {
@@ -142,6 +163,8 @@ const GameIndex = () => {
         setReset(true);
     }
 
+    const flattenedData = games?.pages?.flat() || [];
+
     return (
         <div className="px-3">
             <h1 className="py-5">{Object.values(heading).join(' ')} Games</h1>
@@ -173,11 +196,11 @@ const GameIndex = () => {
                         </div>
                     </div>
                     <div className="row">
-                        {isLoading ? (
+                        {isLoading || isFetchingNextPage ? (
                             <SpinnerComponent color={'primary'} />
                         ) : (
                             <Fragment>
-                                {games?.map((item) => {
+                                {flattenedData?.map((item) => {
                                     const props = cardProps(item, isDarkMode);
                                     return (
                                         <div
@@ -195,6 +218,9 @@ const GameIndex = () => {
                                 })}
                             </Fragment>
                         )}
+                    </div>
+                    <div className="my-5 d-flex justify-content-center">
+                        <Button {...btnProps} />
                     </div>
                 </div>
             </div>

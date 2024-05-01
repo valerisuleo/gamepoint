@@ -5,17 +5,23 @@ import { useState } from 'react';
 import { IGame } from '../interfaces';
 import { gameService } from '../service';
 import { iconMap } from '../../../common/utilities';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 const useGames = () => {
     const [query, setQuery] = useState({});
-    const { data, isLoading } = useQuery<IGame[]>({
+    const { data, isLoading, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<IGame[]>({
         queryKey: ['games', query],
-        queryFn: () => getGames(query),
+        queryFn: ({ pageParam = 1 }) => getGames(pageParam),
+        keepPreviousData: true,
         staleTime: 10 * 1000,
+        getNextPageParam: (lastPage, allPages) => {
+            // return the nextPage number 1 -> 2
+            return lastPage.length ? allPages.length + 1 : undefined;
+        },
     });
 
-    function getGames(params?: Record<string, any>): Promise<IGame[]> {
+    function getGames(pageParam?: number): Promise<IGame[]> {
+        const params = { ...query, page: pageParam };
         return gameService
             .get('games', params)
             .then(({ data }) => addIconProp(data.results));
@@ -45,7 +51,7 @@ const useGames = () => {
         });
     }
 
-    return { games: data, isLoading, listUpdate };
+    return { games: data, isLoading, listUpdate, fetchNextPage, isFetchingNextPage };
 };
 
 export default useGames;
