@@ -1,27 +1,36 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Fragment, useEffect, useState } from 'react';
+
 import CardComponent from '../../../common/library/components/cards/card';
-import { cardProps, sortOptions } from '../config';
-import { useTheme } from '../../../common/context/theme/theme';
-import useGames from '../hooks/useGames';
-import { Fragment, useState } from 'react';
 import SpinnerComponent from '../../../common/library/components/spinner/spinner';
-import useGenres from '../hooks/useGenres';
 import ListGroupComponent from '../../../common/library/components/list-group/list-group';
+import Button from '../../../common/library/components/button/button';
+import SelectComponent from '../../../common/library/forms/select/select';
+
 import {
     IListGroup,
     IListItem,
 } from '../../../common/library/components/list-group/interfaces';
 import { IFormCtrl } from '../../../common/library/forms/hooks/interfaces';
-import usePlatforms from '../hooks/usePlatforms';
-import SelectComponent from '../../../common/library/forms/select/select';
 import { IGenre, IPlatform } from '../interfaces';
-import Button from '../../../common/library/components/button/button';
-import { IBtn } from '../../../common/library/components/button/interfaces';
+import { IEventEmitted } from '../../../common/context/data/interfaces';
+
+import { useTheme } from '../../../common/context/theme/theme';
+import { useDataContext } from '../../../common/context/data/context';
+import useGames from '../hooks/useGames';
+import useGenres from '../hooks/useGenres';
+import usePlatforms from '../hooks/usePlatforms';
+
+import { getBtnProps, sortOptions } from '../config';
+import { cardProps } from './components/game-card';
 
 const GameIndex = () => {
     const { isDarkMode } = useTheme();
     const { games, isLoading, listUpdate } = useGames();
+    const { event } = useDataContext();
+
     const { genres } = useGenres();
     const { platforms } = usePlatforms();
     const [reset, setReset] = useState(false);
@@ -30,17 +39,6 @@ const GameIndex = () => {
         platforms: '',
         ordering: '',
     });
-
-    const btnProps: IBtn = {
-        classes: {
-            contextual: 'secondary',
-            size: 'md',
-        },
-        isDarkMode: false,
-        type: 'button',
-        label: 'Reset',
-        onEmitEvent: handleResetFilters,
-    };
 
     const listProps: IListGroup = {
         collection: genres,
@@ -52,7 +50,7 @@ const GameIndex = () => {
         reset: reset,
     };
 
-    const data: IFormCtrl[] = [
+    const dropDowns: IFormCtrl[] = [
         {
             name: 'platforms',
             label: 'filter by platforms',
@@ -78,7 +76,21 @@ const GameIndex = () => {
         },
     ];
 
-    function handleSelectedGenre(element: IListItem): void {
+    useEffect(() => {
+        handleData(event);
+    }, [event]);
+
+    function handleData(event?: IEventEmitted) {
+        if (event) {
+            const obj = {
+                [event.name]: event.data,
+            };
+
+            listUpdate(obj);
+        }
+    }
+
+    function handleSelectedGenre(element: IListItem) {
         const current = element as IGenre;
         listUpdate({
             genres: current?.id.toString(),
@@ -136,7 +148,7 @@ const GameIndex = () => {
                 </div>
                 <div className="col-md-10">
                     <div className="d-flex justify-content-even align-items-center">
-                        {data?.map((item, i) => (
+                        {dropDowns?.map((item, i) => (
                             <div className="me-3 mb-4" key={i}>
                                 <SelectComponent
                                     options={item.options}
@@ -153,7 +165,7 @@ const GameIndex = () => {
                             </div>
                         ))}
                         <div className="mb-2">
-                            <Button {...btnProps} />
+                            <Button {...getBtnProps(handleResetFilters)} />
                         </div>
                     </div>
                     <div className="row">
