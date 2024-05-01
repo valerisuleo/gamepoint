@@ -1,22 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { IGenre } from '../interfaces';
 import { gameService } from '../service';
+import ms from 'ms';
 
 const useGenres = () => {
-    const [genres, setGenres] = useState<IGenre[]>([]);
+    const { data } = useQuery<IGenre[]>({
+        queryKey: ['genres'],
+        queryFn: () => getGenres(),
+        staleTime: ms('24h'),
+    });
 
-    useEffect(() => {
-        getGenres();
-    }, []);
-
-    function getGenres(): void {
-        gameService.get('genres').then(({ data }) => {
-            setGenres(data.results);
-        });
+    function getGenres(): Promise<IGenre[]> {
+        return gameService.get('genres').then(({ data }) => data.results);
     }
 
-    
-    return { genres };
+    return { genres: data };
 };
 
 export default useGenres;

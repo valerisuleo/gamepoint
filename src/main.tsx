@@ -5,14 +5,22 @@ import { BrowserRouter } from 'react-router-dom';
 import ThemeProvider from './app/common/context/theme/theme';
 import { ContextProviderComposer } from './app/common/context/provider-composer/provider-composer';
 import { DataProvider } from './app/common/context/data/provider';
-import { StrictMode } from 'react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const client = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <StrictMode>
-        <BrowserRouter>
+    <BrowserRouter>
+        <QueryClientProvider client={client}>
             <ContextProviderComposer
                 contexts={[
                     <ThemeProvider children={undefined} />,
@@ -20,7 +28,8 @@ root.render(
                 ]}
             >
                 <App />
+                <ReactQueryDevtools />
             </ContextProviderComposer>
-        </BrowserRouter>
-    </StrictMode>
+        </QueryClientProvider>
+    </BrowserRouter>
 );

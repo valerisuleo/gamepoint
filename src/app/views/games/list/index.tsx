@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CardComponent from '../../../common/library/components/cards/card';
 import SpinnerComponent from '../../../common/library/components/spinner/spinner';
@@ -25,14 +26,16 @@ import usePlatforms from '../hooks/usePlatforms';
 
 import { getBtnProps, sortOptions } from '../config';
 import { cardProps } from './components/game-card';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const GameIndex = () => {
     const { isDarkMode } = useTheme();
-    const { games, isLoading, listUpdate } = useGames();
     const { event } = useDataContext();
-
     const { genres } = useGenres();
     const { platforms } = usePlatforms();
+    const { games, isLoading, listUpdate, fetchNextPage, hasNextPage } =
+        useGames();
+
     const [reset, setReset] = useState(false);
     const [heading, setHeading] = useState({});
     const [filters, setFilters] = useState({
@@ -41,7 +44,7 @@ const GameIndex = () => {
     });
 
     const listProps: IListGroup = {
-        collection: genres,
+        collection: genres || [],
         itemKey: 'id',
         text: 'name',
         isFlush: true,
@@ -56,19 +59,19 @@ const GameIndex = () => {
             label: 'filter by platforms',
             value: filters.platforms,
             onBlur: () => {},
-            onChange: handleInputChange,
+            onChange: handleSelectChange,
             type: 'select',
             textProp: 'name',
             valueProp: 'id',
             //@ts-expect-error
-            options: platforms,
+            options: platforms || [],
         },
         {
             name: 'ordering',
             label: 'order by:',
             value: filters.ordering,
             onBlur: () => {},
-            onChange: handleInputChange,
+            onChange: handleSelectChange,
             type: 'select',
             textProp: 'label',
             valueProp: 'value',
@@ -77,20 +80,21 @@ const GameIndex = () => {
     ];
 
     useEffect(() => {
-        handleData(event);
+        handleSearchData(event);
     }, [event]);
 
-    function handleData(event?: IEventEmitted) {
+    function handleSearchData(event?: IEventEmitted): void {
         if (event) {
+            const { name, data } = event;
             const obj = {
-                [event.name]: event.data,
+                [name]: data,
             };
 
             listUpdate(obj);
         }
     }
 
-    function handleSelectedGenre(element: IListItem) {
+    function handleSelectedGenre(element: IListItem): void {
         const current = element as IGenre;
         listUpdate({
             genres: current?.id.toString(),
@@ -100,7 +104,7 @@ const GameIndex = () => {
         setReset(false);
     }
 
-    function handleInputChange(e: React.ChangeEvent<HTMLSelectElement>): void {
+    function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>): void {
         const { name, value } = e.target;
 
         setFilters((prev) => {
@@ -117,7 +121,7 @@ const GameIndex = () => {
     }
 
     function setDynamicHeading(value: string, name: string): void {
-        const currentPlatform = platforms.find(
+        const currentPlatform = platforms?.find(
             (item: IPlatform) => item.id === +value
         );
 
@@ -135,9 +139,15 @@ const GameIndex = () => {
             ordering: '',
         });
         listUpdate({});
-        setHeading({})
+        setHeading({});
         setReset(true);
     }
+
+    const flattenedData = games?.pages?.flat() || [];
+    const dataLength =
+        games?.pages.reduce((acc, item) => {
+            return acc + item.length;
+        }, 0) || 0;
 
     return (
         <div className="px-3">
@@ -169,12 +179,18 @@ const GameIndex = () => {
                             <Button {...getBtnProps(handleResetFilters)} />
                         </div>
                     </div>
-                    <div className="row">
+                    <div>
                         {isLoading ? (
                             <SpinnerComponent color={'primary'} />
                         ) : (
-                            <Fragment>
-                                {games.map((item) => {
+                            <InfiniteScroll
+                                dataLength={dataLength}
+                                hasMore={!!hasNextPage}
+                                next={() => fetchNextPage()}
+                                loader={<SpinnerComponent color={'primary'} />}
+                                className="row"
+                            >
+                                {flattenedData?.map((item) => {
                                     const props = cardProps(item, isDarkMode);
                                     return (
                                         <div
@@ -190,7 +206,7 @@ const GameIndex = () => {
                                         </div>
                                     );
                                 })}
-                            </Fragment>
+                            </InfiniteScroll>
                         )}
                     </div>
                 </div>

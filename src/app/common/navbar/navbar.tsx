@@ -55,7 +55,7 @@ export function Navbar() {
     };
 
     return (
-        <nav
+        <nav style={{borderBottom: '1px solid white'}}
             className={`navbar navbar-expand-lg navbar-light bg-${
                 isDarkMode ? 'dark' : 'light'
             }`}
