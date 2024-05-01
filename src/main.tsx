@@ -5,19 +5,22 @@ import { BrowserRouter } from 'react-router-dom';
 import ThemeProvider from './app/common/context/theme/theme';
 import { ContextProviderComposer } from './app/common/context/provider-composer/provider-composer';
 import { DataProvider } from './app/common/context/data/provider';
+import { StrictMode } from 'react';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <BrowserRouter>
-        <ContextProviderComposer
-            contexts={[
-                <ThemeProvider children={undefined} />,
-                <DataProvider children={undefined} />,
-            ]}
-        >
-            <App />
-        </ContextProviderComposer>
-    </BrowserRouter>
+    <StrictMode>
+        <BrowserRouter>
+            <ContextProviderComposer
+                contexts={[
+                    <ThemeProvider children={undefined} />,
+                    <DataProvider children={undefined} />,
+                ]}
+            >
+                <App />
+            </ContextProviderComposer>
+        </BrowserRouter>
+    </StrictMode>
 );
