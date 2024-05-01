@@ -135,6 +135,7 @@ const GameIndex = () => {
             ordering: '',
         });
         listUpdate({});
+        setHeading({})
         setReset(true);
     }
 
