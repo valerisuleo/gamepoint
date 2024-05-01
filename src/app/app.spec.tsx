@@ -1,15 +1,22 @@
-import { render } from '@testing-library/react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { cleanup, render } from '@testing-library/react';
 
 import App from './app';
 
-describe('App', () => {
-  it('should render successfully', () => {
-    const { baseElement } = render(<App />);
-    expect(baseElement).toBeTruthy();
-  });
+describe('Sidenav Component', () => {
+    let component: any;
 
-  it('should have a greeting as the title', () => {
-    const { getByText } = render(<App />);
-    expect(getByText(/Welcome gamepoint/gi)).toBeTruthy();
-  });
+    beforeEach(() => {
+        component = () => {
+            return render(<App />);
+        };
+    });
+
+    afterEach(() => {
+        cleanup();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

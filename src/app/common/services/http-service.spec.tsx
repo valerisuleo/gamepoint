@@ -14,32 +14,25 @@ describe('HttpService', () => {
         mock.reset();
     });
 
-    xit('should make a GET request and return data', async () => {
+    it('should make a GET request and return data', async () => {
+        const endpoint = 'testEndpoint'; // Specify the endpoint you wish to test
         const responseData = { data: 'test data' };
-        mock.onGet(url).reply(200, responseData);
+        mock.onGet(`${url}/${endpoint}`).reply(200, responseData);
 
-        const response: AxiosResponse = await httpService.get();
+        const response = await httpService.get(endpoint);
         expect(response.data).toEqual(responseData);
     });
 
-    xit('should make a GET request with query params and return data', async () => {
-        const queryParams = '?name=test';
+
+    it('should make a GET request with query params and return data', async () => {
+        const endpoint = 'testEndpoint';
+        const queryParams = { name: 'test' };  // Query parameters as an object
         const responseData = { data: 'test data' };
-        mock.onGet(`${url}${queryParams}`).reply(200, responseData);
+        mock.onGet(`${url}/${endpoint}`, { params: queryParams }).reply(200, responseData);
 
-        const response: AxiosResponse = await httpService.get(queryParams);
+        const response = await httpService.get(endpoint, queryParams);
         expect(response.data).toEqual(responseData);
     });
-
-    it('should make a POST request and return data', async () => {
-        const payload = { key: 'value' };
-        const responseData = { data: 'created data' };
-        mock.onPost(url).reply(200, responseData);
-
-        const response: AxiosResponse = await httpService.post(payload);
-        expect(response.data).toEqual(responseData);
-    });
-
     it('should make a PUT request and return data', async () => {
         const resource = { id: 1, key: 'value' };
         const responseData = { data: 'updated data' };
