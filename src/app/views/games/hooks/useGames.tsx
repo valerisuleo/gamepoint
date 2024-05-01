@@ -1,32 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IGame } from '../interfaces';
 import { gameService } from '../service';
 import { iconMap } from '../../../common/utilities';
+import { useQuery } from '@tanstack/react-query';
 
 const useGames = () => {
-    const [games, setGames] = useState<IGame[]>([]);
     const [query, setQuery] = useState({});
-    const [isLoading, setSpinner] = useState(false);
+    const { data, isLoading } = useQuery<IGame[]>({
+        queryKey: ['games', query],
+        queryFn: () => getGames(query),
+        staleTime: 10 * 1000,
+    });
 
-    useEffect(() => {
-        // getGames(query);
-        console.log(query);
-    }, [query]);
-
-    async function getGames(params?: Record<string, any>): Promise<void> {
-        try {
-            setSpinner(true);
-            const promise = gameService.get('games', params);
-            const response = await promise;
-            setGames(addIconProp(response.data.results));
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setSpinner(false);
-        }
+    function getGames(params?: Record<string, any>): Promise<IGame[]> {
+        return gameService
+            .get('games', params)
+            .then(({ data }) => addIconProp(data.results));
     }
 
     function listUpdate(current: any): void {
@@ -53,7 +45,7 @@ const useGames = () => {
         });
     }
 
-    return { games, isLoading, listUpdate };
+    return { games: data, isLoading, listUpdate };
 };
 
 export default useGames;

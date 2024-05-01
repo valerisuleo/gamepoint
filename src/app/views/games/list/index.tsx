@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -81,17 +82,18 @@ const GameIndex = () => {
         handleData(event);
     }, [event]);
 
-    function handleData(event?: IEventEmitted) {
+    function handleData(event?: IEventEmitted): void {
         if (event) {
+            const { name, data } = event;
             const obj = {
-                [event.name]: event.data,
+                [name]: data,
             };
 
             listUpdate(obj);
         }
     }
 
-    function handleSelectedGenre(element: IListItem) {
+    function handleSelectedGenre(element: IListItem): void {
         const current = element as IGenre;
         listUpdate({
             genres: current?.id.toString(),
@@ -175,7 +177,7 @@ const GameIndex = () => {
                             <SpinnerComponent color={'primary'} />
                         ) : (
                             <Fragment>
-                                {games.map((item) => {
+                                {games?.map((item) => {
                                     const props = cardProps(item, isDarkMode);
                                     return (
                                         <div
