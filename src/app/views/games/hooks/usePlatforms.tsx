@@ -1,25 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { IPlatform } from '../interfaces';
 import { gameService } from '../service';
 
 const usePlatforms = () => {
-    const [platforms, setPlatforms] = useState<IPlatform[]>([]);
+    const { data } = useQuery<IPlatform[]>({
+        queryKey: ['platforms'],
+        queryFn: () => getPlatforms(),
+        staleTime: 10 * 1000,
+    });
 
-    useEffect(() => {
-        getPlatforms();
-    }, []);
-
-    async function getPlatforms() {
-        try {
-            const promise = gameService.get('platforms');
-            const { data } = await promise;
-            setPlatforms(data.results);
-        } catch (error) {
-            console.log('oops! something wrong with platfroms...', error);
-        }
+    function getPlatforms(): Promise<IPlatform[]> {
+        return gameService.get('platforms').then(({ data }) => data.results);
     }
 
-    return { platforms };
+    return { platforms: data };
 };
 
 export default usePlatforms;

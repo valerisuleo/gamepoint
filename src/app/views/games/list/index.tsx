@@ -62,7 +62,7 @@ const GameIndex = () => {
             textProp: 'name',
             valueProp: 'id',
             //@ts-expect-error
-            options: platforms,
+            options: platforms || [],
         },
         {
             name: 'ordering',
@@ -118,7 +118,7 @@ const GameIndex = () => {
     }
 
     function setDynamicHeading(value: string, name: string): void {
-        const currentPlatform = platforms.find(
+        const currentPlatform = platforms?.find(
             (item: IPlatform) => item.id === +value
         );
 

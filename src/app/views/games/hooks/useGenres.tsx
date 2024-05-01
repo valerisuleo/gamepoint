@@ -6,7 +6,7 @@ const useGenres = () => {
     const { data } = useQuery<IGenre[]>({
         queryKey: ['genres'],
         queryFn: () => getGenres(),
-        staleTime: 10 * 1000, // 10 seconds
+        staleTime: 10 * 1000,
     });
 
     function getGenres(): Promise<IGenre[]> {
