@@ -1,7 +1,7 @@
 // src/RoutingModule.js
 import React, { Fragment, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from '../common/components/navbar/navbar';
+import Navbar from '../common/navbar/navbar';
 
 // Lazy loading the Game component
 const GameRouter = lazy(() => import('../views/games/routes'));

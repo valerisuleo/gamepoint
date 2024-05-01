@@ -12,7 +12,7 @@ const useGames = () => {
     const [isLoading, setSpinner] = useState(false);
 
     useEffect(() => {
-        // getGames(query);
+        getGames(query);
         console.log(query);
     }, [query]);
 

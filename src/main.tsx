@@ -4,6 +4,7 @@ import App from './app/app';
 import { BrowserRouter } from 'react-router-dom';
 import ThemeProvider from './app/common/context/theme/theme';
 import { ContextProviderComposer } from './app/common/context/provider-composer/provider-composer';
+import { DataProvider } from './app/common/context/data/provider';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -11,7 +12,10 @@ const root = ReactDOM.createRoot(
 root.render(
     <BrowserRouter>
         <ContextProviderComposer
-            contexts={[<ThemeProvider children={undefined} />]}
+            contexts={[
+                <ThemeProvider children={undefined} />,
+                <DataProvider children={undefined} />,
+            ]}
         >
             <App />
         </ContextProviderComposer>

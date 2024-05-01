@@ -2,14 +2,17 @@
 /* eslint-disable-next-line */
 
 import { useEffect, useState } from 'react';
-import Button from '../../library/components/button/button';
-import { IBtn } from '../../library/components/button/interfaces';
-import { useTheme } from '../../context/theme/theme';
+import Button from '../library/components/button/button';
+import { IBtn } from '../library/components/button/interfaces';
+import { useTheme } from '../context/theme/theme';
 import { Link } from 'react-router-dom';
+import { useDataContext } from '../context/data/context';
 
 export function Navbar() {
-    const [isOpen, setOpen] = useState(false);
     const { isDarkMode, handleDarkMode } = useTheme();
+    const { outputEvent } = useDataContext();
+    const [isOpen, setOpen] = useState(false);
+    const [value, setValue] = useState('');
     const [btnProps, setProps] = useState<IBtn>({
         label: 'Dark Mode',
         type: 'button',
@@ -21,10 +24,6 @@ export function Navbar() {
         },
     });
 
-    const toggleMenu = () => {
-        setOpen((prevState) => !prevState);
-    };
-
     useEffect(() => {
         setProps((prevState) => ({
             ...prevState,
@@ -35,6 +34,25 @@ export function Navbar() {
             },
         }));
     }, [isDarkMode]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const current = e.target;
+        setValue(current.value);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        outputEvent({
+            name: 'search',
+            data: value,
+        });
+
+        setValue('');
+    };
+
+    const toggleMenu = () => {
+        setOpen((prevState) => !prevState);
+    };
 
     return (
         <nav
@@ -120,13 +138,15 @@ export function Navbar() {
                             <a className="nav-link disabled">Disabled</a>
                         </li> */}
                     </ul>
-                    <form className="d-flex">
-                        <div className='mx-2'>
+                    <form className="d-flex" onSubmit={handleSubmit}>
+                        <div className="mx-2">
                             <input
                                 className="form-control"
-                                type="search"
+                                type="text"
                                 placeholder="Search"
                                 aria-label="Search"
+                                onChange={handleChange}
+                                value={value}
                             />
                         </div>
                         <div className="d-flex align-items-center">
