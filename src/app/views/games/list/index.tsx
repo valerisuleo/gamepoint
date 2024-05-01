@@ -32,6 +32,7 @@ const GameIndex = () => {
     const { event } = useDataContext();
 
     const { genres } = useGenres();
+
     const { platforms } = usePlatforms();
     const [reset, setReset] = useState(false);
     const [heading, setHeading] = useState({});
@@ -41,7 +42,7 @@ const GameIndex = () => {
     });
 
     const listProps: IListGroup = {
-        collection: genres,
+        collection: genres || [],
         itemKey: 'id',
         text: 'name',
         isFlush: true,
@@ -135,7 +136,7 @@ const GameIndex = () => {
             ordering: '',
         });
         listUpdate({});
-        setHeading({})
+        setHeading({});
         setReset(true);
     }
 
