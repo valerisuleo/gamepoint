@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { IGenre } from '../interfaces';
 import { gameService } from '../service';
+import ms from 'ms';
 
 const useGenres = () => {
     const { data } = useQuery<IGenre[]>({
         queryKey: ['genres'],
         queryFn: () => getGenres(),
-        staleTime: 10 * 1000,
+        staleTime: ms('24h'),
     });
 
     function getGenres(): Promise<IGenre[]> {

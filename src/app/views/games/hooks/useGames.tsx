@@ -6,6 +6,7 @@ import { IGame } from '../interfaces';
 import { gameService } from '../service';
 import { iconMap } from '../../../common/utilities';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import ms from 'ms';
 
 const useGames = () => {
     const [query, setQuery] = useState({});
@@ -14,7 +15,7 @@ const useGames = () => {
             queryKey: ['games', query],
             queryFn: ({ pageParam = 1 }) => getGames(pageParam),
             keepPreviousData: true,
-            staleTime: 24 * 60 * 60 * 1000, //24h
+            staleTime: ms('24h'),
             getNextPageParam: (lastPage, allPages) => {
                 // return the nextPage number 1 -> 2
                 return lastPage.length ? allPages.length + 1 : undefined;
