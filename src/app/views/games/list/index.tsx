@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CardComponent from '../../../common/library/components/cards/card';
 import SpinnerComponent from '../../../common/library/components/spinner/spinner';
@@ -26,14 +26,14 @@ import usePlatforms from '../hooks/usePlatforms';
 
 import { getBtnProps, sortOptions } from '../config';
 import { cardProps } from './components/game-card';
-import { IBtn } from '../../../common/library/components/button/interfaces';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const GameIndex = () => {
     const { isDarkMode } = useTheme();
     const { event } = useDataContext();
     const { genres } = useGenres();
     const { platforms } = usePlatforms();
-    const { games, isLoading, listUpdate, fetchNextPage, isFetchingNextPage } =
+    const { games, isLoading, listUpdate, fetchNextPage, hasNextPage } =
         useGames();
 
     const [reset, setReset] = useState(false);
@@ -41,16 +41,6 @@ const GameIndex = () => {
     const [filters, setFilters] = useState({
         platforms: '',
         ordering: '',
-    });
-    const [btnProps, setBtnProps] = useState<IBtn>({
-        type: 'button',
-        label: 'Load more...',
-        isDarkMode,
-        onEmitEvent: fetchNextPage,
-        classes: {
-            contextual: 'primary',
-            size: 'lg',
-        },
     });
 
     const listProps: IListGroup = {
@@ -90,20 +80,10 @@ const GameIndex = () => {
     ];
 
     useEffect(() => {
-        handleData(event);
+        handleSearchData(event);
     }, [event]);
 
-    useEffect(() => {
-        setBtnProps((prevState) => ({
-            ...prevState,
-            classes: {
-                ...prevState.classes,
-                contextual: isDarkMode ? 'light' : 'dark',
-            },
-        }));
-    }, [isDarkMode]);
-
-    function handleData(event?: IEventEmitted): void {
+    function handleSearchData(event?: IEventEmitted): void {
         if (event) {
             const { name, data } = event;
             const obj = {
@@ -164,6 +144,10 @@ const GameIndex = () => {
     }
 
     const flattenedData = games?.pages?.flat() || [];
+    const dataLength =
+        games?.pages.reduce((acc, item) => {
+            return acc + item.length;
+        }, 0) || 0;
 
     return (
         <div className="px-3">
@@ -195,11 +179,17 @@ const GameIndex = () => {
                             <Button {...getBtnProps(handleResetFilters)} />
                         </div>
                     </div>
-                    <div className="row">
-                        {isLoading || isFetchingNextPage ? (
+                    <div>
+                        {isLoading ? (
                             <SpinnerComponent color={'primary'} />
                         ) : (
-                            <Fragment>
+                            <InfiniteScroll
+                                dataLength={dataLength}
+                                hasMore={!!hasNextPage}
+                                next={() => fetchNextPage()}
+                                loader={<SpinnerComponent color={'primary'} />}
+                                className="row"
+                            >
                                 {flattenedData?.map((item) => {
                                     const props = cardProps(item, isDarkMode);
                                     return (
@@ -216,11 +206,8 @@ const GameIndex = () => {
                                         </div>
                                     );
                                 })}
-                            </Fragment>
+                            </InfiniteScroll>
                         )}
-                    </div>
-                    <div className="my-5 d-flex justify-content-center">
-                        <Button {...btnProps} />
                     </div>
                 </div>
             </div>

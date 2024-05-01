@@ -9,16 +9,17 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 const useGames = () => {
     const [query, setQuery] = useState({});
-    const { data, isLoading, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<IGame[]>({
-        queryKey: ['games', query],
-        queryFn: ({ pageParam = 1 }) => getGames(pageParam),
-        keepPreviousData: true,
-        staleTime: 10 * 1000,
-        getNextPageParam: (lastPage, allPages) => {
-            // return the nextPage number 1 -> 2
-            return lastPage.length ? allPages.length + 1 : undefined;
-        },
-    });
+    const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
+        useInfiniteQuery<IGame[]>({
+            queryKey: ['games', query],
+            queryFn: ({ pageParam = 1 }) => getGames(pageParam),
+            keepPreviousData: true,
+            staleTime: 24 * 60 * 60 * 1000, // 24h
+            getNextPageParam: (lastPage, allPages) => {
+                // return the nextPage number 1 -> 2
+                return lastPage.length ? allPages.length + 1 : undefined;
+            },
+        });
 
     function getGames(pageParam?: number): Promise<IGame[]> {
         const params = { ...query, page: pageParam };
@@ -51,7 +52,14 @@ const useGames = () => {
         });
     }
 
-    return { games: data, isLoading, listUpdate, fetchNextPage, isFetchingNextPage };
+    return {
+        games: data,
+        isLoading,
+        listUpdate,
+        fetchNextPage,
+        isFetchingNextPage,
+        hasNextPage,
+    };
 };
 
 export default useGames;
