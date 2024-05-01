@@ -13,7 +13,6 @@ const useGames = () => {
 
     useEffect(() => {
         getGames(query);
-        console.log(query);
     }, [query]);
 
     async function getGames(params?: Record<string, any>): Promise<void> {

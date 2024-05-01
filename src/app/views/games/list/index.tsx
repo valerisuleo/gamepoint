@@ -14,7 +14,7 @@ import {
     IListItem,
 } from '../../../common/library/components/list-group/interfaces';
 import { IFormCtrl } from '../../../common/library/forms/hooks/interfaces';
-import { IGenre } from '../interfaces';
+import { IGenre, IPlatform } from '../interfaces';
 import { IEventEmitted } from '../../../common/context/data/interfaces';
 
 import { useTheme } from '../../../common/context/theme/theme';
@@ -34,6 +34,7 @@ const GameIndex = () => {
     const { genres } = useGenres();
     const { platforms } = usePlatforms();
     const [reset, setReset] = useState(false);
+    const [heading, setHeading] = useState({});
     const [filters, setFilters] = useState({
         platforms: '',
         ordering: '',
@@ -94,6 +95,9 @@ const GameIndex = () => {
         listUpdate({
             genres: current?.id.toString(),
         });
+
+        setHeading((prev) => ({ ...prev, genres: current.name }));
+        setReset(false);
     }
 
     function handleInputChange(e: React.ChangeEvent<HTMLSelectElement>): void {
@@ -108,10 +112,24 @@ const GameIndex = () => {
             [name]: value,
         });
 
-        listProps.reset = true;
+        setDynamicHeading(value, name);
+        setReset(false);
     }
 
-    function handleResetFilters() {
+    function setDynamicHeading(value: string, name: string): void {
+        const currentPlatform = platforms.find(
+            (item: IPlatform) => item.id === +value
+        );
+
+        if (name === 'platforms') {
+            setHeading((prev) => ({
+                ...prev,
+                platform: currentPlatform?.name,
+            }));
+        }
+    }
+
+    function handleResetFilters(): void {
         setFilters({
             platforms: '',
             ordering: '',
@@ -121,8 +139,8 @@ const GameIndex = () => {
     }
 
     return (
-        <div>
-            <h1 className="my-5">GameIndex</h1>
+        <div className="px-3">
+            <h1 className="py-5">{Object.values(heading).join(' ')} Games</h1>
 
             <div className="row">
                 <div className="col-md-2">
