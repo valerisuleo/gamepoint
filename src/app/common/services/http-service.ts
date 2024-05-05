@@ -36,19 +36,22 @@ export class HttpService {
     // __________________________HANDLING ERRORS__________________________
     private errorsIntereptor(): void {
         this.http.interceptors.response.use(null, (error: AxiosError) => {
-            const { status } = error.response || {};
+            if (!error.response) {
+                toast.error(error.message, {
+                    toastId: 'network-error'
+                });
+                return Promise.reject(new AppError(error));
+            }
 
-            if (status) {
-                const expectedError = status >= 400 && status < 500;
+            const { status } = error.response;
 
-                if (!expectedError) {
-                    // This is a good place for Sentry.io
-                    toast.error('Oops...unexpected error!');
-                    return Promise.reject(new AppError(error));
-                } else {
-                    toast.error('error!');
-                    throw this.handleError(error);
-                }
+            const expectedError = status >= 400 && status < 500;
+            if (!expectedError) {
+                toast.error('Oops...unexpected server error!');
+                return Promise.reject(new AppError(error));
+            } else {
+                toast.error('An error occurred: ' + error.response.statusText);
+                throw this.handleError(error);
             }
         });
     }
