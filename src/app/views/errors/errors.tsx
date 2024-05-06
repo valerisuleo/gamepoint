@@ -1,16 +1,16 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
+import Notfound from './not-found/notfound';
 
 const ErrorPage = () => {
     const error = useRouteError();
-    
+
     return (
         <div className="m-5">
-            <h1>Oops!</h1>
-            <p>
-                {isRouteErrorResponse(error)
-                    ? 'Invalid Page'
-                    : 'Something went wrong...'}
-            </p>
+            {isRouteErrorResponse(error) ? (
+                <Notfound />
+            ) : (
+                'Something went wrong...'
+            )}
         </div>
     );
 };
