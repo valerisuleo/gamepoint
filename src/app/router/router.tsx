@@ -1,15 +1,18 @@
 // src/RoutingModule.js
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 import Layout from './layout';
 import { lazy } from 'react';
 
-const GameRouter = lazy(() => import('../views/games/routes'));
+const GameRoutes = lazy(() => import('../views/games/routes'));
 const router = createBrowserRouter([
     {
-        path: '/games',
-
+        path: '/',
+        element: <Navigate to="/games" replace />,
+    },
+    {
+        path: '/',
         element: <Layout />,
-        children: [{ path: '', element: <GameRouter /> }],
+        children: [{ path: '/games/*', element: <GameRoutes /> }],
     },
 ]);
 

@@ -1,7 +1,8 @@
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../common/navbar/navbar';
 import { useTheme } from '../common/context/theme/theme';
+import SpinnerComponent from '../common/library/components/spinner/spinner';
 
 const Layout = () => {
     const { isDarkMode } = useTheme();
@@ -14,7 +15,9 @@ const Layout = () => {
                     isDarkMode && 'bg-dark text-white'
                 }`}
             >
-                <Outlet />
+                <Suspense fallback={<SpinnerComponent color="primary" />}>
+                    <Outlet />
+                </Suspense>
             </main>
         </Fragment>
     );
