@@ -29,6 +29,7 @@ const Layout = () => {
                 className={`container-fluid ${
                     isDarkMode && 'bg-dark text-white'
                 }`}
+                style={{ backgroundColor: 'white' }}
             >
                 <Suspense fallback={<SpinnerComponent color="primary" />}>
                     <Outlet />

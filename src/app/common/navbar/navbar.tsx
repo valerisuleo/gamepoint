@@ -7,7 +7,7 @@ import { IBtn } from '../library/components/button/interfaces';
 import { useTheme } from '../context/theme/theme';
 import { Link } from 'react-router-dom';
 import { useDataContext } from '../context/data/context';
-
+import 'animate.css';
 export function Navbar() {
     const { isDarkMode, handleDarkMode } = useTheme();
     const { outputEvent } = useDataContext();
@@ -55,7 +55,8 @@ export function Navbar() {
     };
 
     return (
-        <nav style={{borderBottom: '1px solid white'}}
+        <nav
+            style={{ borderBottom: '1px solid white' }}
             className={`navbar navbar-expand-lg navbar-light bg-${
                 isDarkMode ? 'dark' : 'light'
             }`}
