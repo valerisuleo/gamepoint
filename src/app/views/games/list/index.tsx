@@ -9,7 +9,7 @@ import SpinnerComponent from '../../../common/library/components/spinner/spinner
 import ListGroupComponent from '../../../common/library/components/list-group/list-group';
 import Button from '../../../common/library/components/button/button';
 import SelectComponent from '../../../common/library/forms/select/select';
-
+import styles from './index.module.scss';
 import {
     IListGroup,
     IListItem,
@@ -196,7 +196,7 @@ const GameIndex = () => {
                                     const props = cardProps(item, isDarkMode);
                                     return (
                                         <div
-                                            className="col-md-6 col-lg-4 mb-4"
+                                            className={`col-md-6 col-lg-4 mb-4 pt-3 ${styles['game-card']}`}
                                             key={item.id}
                                         >
                                             <CardComponent
