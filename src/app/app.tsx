@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Router, RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 
 import router from './router/router';
 
