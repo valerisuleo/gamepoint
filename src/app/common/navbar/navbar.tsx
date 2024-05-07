@@ -17,7 +17,7 @@ export function Navbar() {
     const [btnProps, setProps] = useState<IBtn>({
         label: 'Dark Mode',
         type: 'button',
-        isDarkMode,
+        isDarkMode: false,
         onEmitEvent: handleDarkMode,
         classes: {
             contextual: 'dark',
