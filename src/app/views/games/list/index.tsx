@@ -205,7 +205,10 @@ const GameIndex = () => {
                                     const props = cardProps(item, isDarkMode);
                                     return (
                                         <div
-                                            className={`col-md-6 col-lg-4 mb-4 pt-3 ${styles['game-card']}`}
+                                            className={`col-md-6 col-lg-4 mb-4 pt-3 ${
+                                                screenType === 'desktop' &&
+                                                styles['game-card']
+                                            }`}
                                             key={item.id}
                                             onClick={() =>
                                                 navigate(`${item.id}`)
