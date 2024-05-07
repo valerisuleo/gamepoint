@@ -38,7 +38,7 @@ export class HttpService {
         this.http.interceptors.response.use(null, (error: AxiosError) => {
             if (!error.response) {
                 toast.error(error.message, {
-                    toastId: 'network-error'
+                    toastId: 'network-error',
                 });
                 return Promise.reject(new AppError(error));
             }
@@ -50,7 +50,7 @@ export class HttpService {
                 toast.error('Oops...unexpected server error!');
                 return Promise.reject(new AppError(error));
             } else {
-                toast.error('An error occurred: ' + error.response.statusText);
+                toast.error(error.message);
                 throw this.handleError(error);
             }
         });

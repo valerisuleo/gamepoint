@@ -5,6 +5,12 @@ export interface IGame {
     background_image: string;
     parent_platforms: IPlatform[];
     genres: IGenre[];
+    slug?: string;
+    description_raw?: string;
+    publishers?: [];
+    metacritic?: number;
+    movies: IMovie;
+    screenshots: IScreenshot[];
 }
 
 export interface IGenre {
@@ -25,7 +31,7 @@ export interface IPlatform {
     year_end?: null | number;
     games?: IGame[];
     icon?: any;
-    platform?: any
+    platform?: any;
 }
 
 export interface IGameHeader {
@@ -36,4 +42,31 @@ export interface IGameHeader {
 interface IGameFilters {
     platforms: string;
     ordering: string;
+}
+
+interface IMovie {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: VideoDetail[];
+}
+
+interface VideoDetail {
+    id: number;
+    name: string;
+    preview: string;
+    data: VideoData;
+}
+
+interface VideoData {
+    '480': string;
+    max: string;
+}
+
+interface IScreenshot {
+    id: number;
+    image: string;
+    width: number;
+    height: number;
+    is_deleted: boolean;
 }
