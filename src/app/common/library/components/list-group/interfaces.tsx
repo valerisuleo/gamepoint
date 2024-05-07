@@ -13,4 +13,5 @@ export interface IListGroup {
     isFlush?: boolean;
     isDarkMode?: boolean;
     reset?: boolean;
+    displayOnly?: boolean;
 }

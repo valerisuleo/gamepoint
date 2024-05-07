@@ -5,6 +5,10 @@ export interface IGame {
     background_image: string;
     parent_platforms: IPlatform[];
     genres: IGenre[];
+    slug?: string;
+    description_raw?: string;
+    publishers?: [];
+    metacritic?: number
 }
 
 export interface IGenre {

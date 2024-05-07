@@ -25,8 +25,9 @@ import useGenres from '../hooks/useGenres';
 import usePlatforms from '../hooks/usePlatforms';
 
 import { getBtnProps, sortOptions } from '../config';
-import { cardProps } from './components/game-card';
+import { cardProps } from '../components/game-card';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useNavigate } from 'react-router-dom';
 
 const GameIndex = () => {
     const { isDarkMode } = useTheme();
@@ -36,6 +37,7 @@ const GameIndex = () => {
     const { games, isLoading, listUpdate, fetchNextPage, hasNextPage } =
         useGames();
 
+    const navigate = useNavigate();
     const [reset, setReset] = useState(false);
     const [heading, setHeading] = useState({});
     const [filters, setFilters] = useState({
@@ -198,6 +200,9 @@ const GameIndex = () => {
                                         <div
                                             className={`col-md-6 col-lg-4 mb-4 pt-3 ${styles['game-card']}`}
                                             key={item.id}
+                                            onClick={() =>
+                                                navigate(`${item.id}`)
+                                            }
                                         >
                                             <CardComponent
                                                 header={props.header}
