@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { IGame } from '../interfaces';
 import { gameService } from '../service';
-import { iconMap } from '../../../common/utilities';
+import { iconMap } from '../../../common/utils/utilities';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import ms from 'ms';
 

@@ -28,12 +28,17 @@ import { getBtnProps, sortOptions } from '../config';
 import { cardProps } from '../components/game-card';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useNavigate } from 'react-router-dom';
+import useScreenDetect from '../../../common/utils/useScreen';
 
 const GameIndex = () => {
     const { isDarkMode } = useTheme();
+    const screenType = useScreenDetect();
     const { event } = useDataContext();
     const { genres } = useGenres();
     const { platforms } = usePlatforms();
+
+    console.log('screenType', screenType);
+
     const { games, isLoading, listUpdate, fetchNextPage, hasNextPage } =
         useGames();
 
@@ -156,12 +161,14 @@ const GameIndex = () => {
             <h1 className="py-5">{Object.values(heading).join(' ')} Games</h1>
 
             <div className="row">
-                <div className="col-md-2">
-                    <div className="animate__animated animate__fadeInLeft">
-                        <ListGroupComponent {...listProps} />
+                {screenType === 'desktop' ? (
+                    <div className="col-lg-2">
+                        <div className="animate__animated animate__fadeInLeft">
+                            <ListGroupComponent {...listProps} />
+                        </div>
                     </div>
-                </div>
-                <div className="col-md-10">
+                ) : null}
+                <div className="col-lg-10">
                     <div className="d-flex justify-content-even align-items-center animate__animated animate__fadeInDownBig 3s">
                         {dropDowns?.map((item, i) => (
                             <div className="me-3 mb-4" key={i}>

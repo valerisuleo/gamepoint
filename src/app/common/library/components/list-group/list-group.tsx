@@ -11,8 +11,9 @@ const ListGroupComponent = ({
     isHorizontal,
     isFlush,
     isDarkMode,
+    noBottomBorder = false, // New prop with default value
     reset = false,
-    displayOnly = false, // Added optional prop with default value
+    displayOnly = false,
 }: IListGroup) => {
     const [isActive, setActive] = useState(-1);
 
@@ -25,7 +26,7 @@ const ListGroupComponent = ({
     const setClasses = (index: number, item?: any) => {
         let classes = 'list-group-item list-group-item-action ';
 
-        if (isActive === index && !displayOnly) { // Check displayOnly before adding 'active'
+        if (isActive === index && !displayOnly) {
             classes += 'active ';
         }
 
@@ -34,7 +35,11 @@ const ListGroupComponent = ({
         }
 
         if (isDarkMode) {
-            classes += styles['list-group-item-dark'];
+            classes += styles['list-group-item-dark'] + ' ';
+        }
+
+        if (noBottomBorder) {
+            classes += styles['no-bottom-border'] + ' '; // Assuming you add a CSS class
         }
 
         return classes.trim();
@@ -50,7 +55,7 @@ const ListGroupComponent = ({
                 <li
                     key={item[itemKey]}
                     onClick={() => {
-                        if (!displayOnly) { // Only change active item if not displayOnly
+                        if (!displayOnly) {
                             setActive(i);
                             onEmitEvent(item);
                         }

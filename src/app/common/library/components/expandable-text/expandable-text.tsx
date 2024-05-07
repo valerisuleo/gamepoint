@@ -29,7 +29,7 @@ const ExpandableTextComponent = ({ text, maxLength }: IExpandableText) => {
 
     return (
         <div>
-            <p className="p-2">
+            <p className="p-2" style={{lineHeight: '2rem'}}>
                 {displayText}
                 {text?.length > maxLength && <Button {...btnProps} />}
             </p>

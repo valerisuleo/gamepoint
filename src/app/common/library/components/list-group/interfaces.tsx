@@ -14,4 +14,5 @@ export interface IListGroup {
     isDarkMode?: boolean;
     reset?: boolean;
     displayOnly?: boolean;
+    noBottomBorder?: boolean;
 }

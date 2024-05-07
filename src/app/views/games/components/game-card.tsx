@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICard } from '../../../common/library/components/cards/ intefaces';
 import IconComponent from '../../../common/library/components/icon/icon';
-import { imgResizer } from '../../../common/utilities';
+import { imgResizer } from '../../../common/utils/utilities';
 import { IGame } from '../interfaces';
 import Metacritic from './metacritic';
 

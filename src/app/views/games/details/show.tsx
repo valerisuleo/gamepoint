@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable no-empty */
 import { useParams } from 'react-router-dom';
@@ -8,13 +9,13 @@ import { useTheme } from '../../../common/context/theme/theme';
 import ExpandableTextComponent from '../../../common/library/components/expandable-text/expandable-text';
 import { Fragment } from 'react';
 import Metacritic from '../components/metacritic';
+import styles from './show.module.scss';
+import { imgResizer } from '../../../common/utils/utilities';
 
 function GameShow() {
     const gameId = useParams()?.id;
     const { game } = useGame(gameId!);
     const { isDarkMode } = useTheme();
-
-    // console.log(game);
 
     const listProps: IListGroup = {
         collection: [],
@@ -23,20 +24,22 @@ function GameShow() {
         isFlush: true,
         displayOnly: true,
         isDarkMode,
+        noBottomBorder: true,
         onEmitEvent: () => {},
     };
 
+    console.log(game);
+
     return (
-        // eslint-disable-next-line react/jsx-no-useless-fragment
         <Fragment>
             {game ? (
                 <div className="p-3">
                     <h1 className="my-4">{game.name}</h1>
                     <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12 col-lg-6 animate__animated animate__slideInLeft">
                             <ExpandableTextComponent
                                 text={game.description_raw || ''}
-                                maxLength={300}
+                                maxLength={900}
                             />
                             <div className="row my-5">
                                 <div className="col-6">
@@ -68,7 +71,36 @@ function GameShow() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6"></div>
+                        <div className="col-md-12 col-lg-6 animate__animated animate__slideInRight">
+                            {game.movies.results.length ? (
+                                <video
+                                    src={game.movies.results[0].data[480]}
+                                    poster={game.movies.results[0].preview}
+                                    controls
+                                    className={styles['media-container']}
+                                />
+                            ) : (
+                                <img
+                                    src={game.background_image}
+                                    alt={`${game.name} poster`}
+                                    className={styles['media-container']}
+                                />
+                            )}
+                            <div className="row pt-4">
+                                {game.screenshots.map((item) => (
+                                    <div className="col-md-6 pb-4">
+                                        <img
+                                            src={imgResizer(item.image)}
+                                            alt={`${game.name} poster`}
+                                            className={
+                                                styles['media-container']
+                                            }
+                                            key={item.id}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             ) : null}
