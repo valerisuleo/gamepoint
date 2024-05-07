@@ -1,16 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable-next-line */
-
 import { useEffect, useState } from 'react';
 import Button from '../library/components/button/button';
 import { IBtn } from '../library/components/button/interfaces';
 import { useTheme } from '../context/theme/theme';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDataContext } from '../context/data/context';
 import 'animate.css';
+
 export function Navbar() {
     const { isDarkMode, handleDarkMode } = useTheme();
     const { outputEvent } = useDataContext();
+    const navigate = useNavigate();
     const [isOpen, setOpen] = useState(false);
     const [value, setValue] = useState('');
     const [btnProps, setProps] = useState<IBtn>({
@@ -23,6 +24,8 @@ export function Navbar() {
             size: 'md',
         },
     });
+    const navbarTheme = isDarkMode ? 'dark' : 'light';
+    const classes = `navbar navbar-expand-lg navbar-${navbarTheme} bg-${navbarTheme}`;
 
     useEffect(() => {
         setProps((prevState) => ({
@@ -48,6 +51,7 @@ export function Navbar() {
         });
 
         setValue('');
+        navigate('/games');
     };
 
     const toggleMenu = () => {
@@ -55,18 +59,16 @@ export function Navbar() {
     };
 
     return (
-        <nav
-            style={{ borderBottom: '1px solid white' }}
-            className={`navbar navbar-expand-lg navbar-light bg-${
-                isDarkMode ? 'dark' : 'light'
-            }`}
-        >
+        <nav style={{ borderBottom: '1px solid white' }} className={classes}>
             <div className="container-fluid">
-                <Link
-                    className={`navbar-brand ${isDarkMode && 'text-white'}`}
-                    to="/"
-                >
-                    Game Point
+                <Link className={`navbar-brand`} to="/">
+                    <img
+                        src={`../../../assets/${navbarTheme}.png`}
+                        alt=""
+                        width="50"
+                        height="auto"
+                    />
+                    <span className='ps-3'>Game Point</span>
                 </Link>
                 <button
                     className="navbar-toggler"
@@ -84,61 +86,7 @@ export function Navbar() {
                     className={`collapse navbar-collapse ${isOpen && 'show'}`}
                     id="navbarSupportedContent"
                 >
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
-                            <Link
-                                className={`navbar-brand ${
-                                    isDarkMode && 'text-white'
-                                }`}
-                                to="/"
-                            >
-                                Home
-                            </Link>
-                        </li>
-                        {/* <li className="nav-item">
-                            <a className="nav-link" href="#">
-                                Link
-                            </a>
-                        </li>
-                        <li className="nav-item dropdown">
-                            <a
-                                className="nav-link dropdown-toggle"
-                                href="#"
-                                id="navbarDropdown"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                Dropdown
-                            </a>
-                            <ul
-                                className="dropdown-menu"
-                                aria-labelledby="navbarDropdown"
-                            >
-                                <li>
-                                    <a className="dropdown-item" href="#">
-                                        Action
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">
-                                        Another action
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">
-                                        Something else here
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link disabled">Disabled</a>
-                        </li> */}
-                    </ul>
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0"></ul>
                     <form className="d-flex" onSubmit={handleSubmit}>
                         <div className="mx-2">
                             <input
