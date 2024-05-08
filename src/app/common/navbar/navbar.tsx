@@ -25,7 +25,7 @@ export function Navbar() {
         },
     });
     const navbarTheme = isDarkMode ? 'dark' : 'light';
-    const classes = `navbar navbar-expand-lg navbar-${navbarTheme} bg-${navbarTheme}`;
+    const classes = `navbar navbar-expand-lg sticky-top navbar-${navbarTheme} bg-${navbarTheme}`;
 
     useEffect(() => {
         setProps((prevState) => ({
