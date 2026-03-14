@@ -1,6 +1,6 @@
 # GamePoint
 
-Welcome to GamePoint, a cutting-edge React application designed for discovering and engaging with a vast array of video games. Leveraging the latest in web technologies, GamePoint offers an immersive experience, allowing users to explore, filter, and learn about their favorite games with ease.
+Welcome to GamePoint! A cutting-edge React application designed for discovering and engaging with a vast array of video games. Leveraging the latest in web technologies, GamePoint offers an immersive experience, allowing users to explore, filter, and learn about their favorite games with ease.
 
 ## Features
 
